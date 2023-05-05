@@ -16,8 +16,8 @@ from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
 import google.auth.transport.requests
 from requests.structures import CaseInsensitiveDict
-from __init__ import app,db
-from models import *
+from .__init__ import app,db
+from .models import *
 
 with open("config.json","r") as c:
     params=json.load(c)['params']
