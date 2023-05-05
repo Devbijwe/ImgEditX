@@ -1,0 +1,96 @@
+{% extends "layout.html" %}{% block main %}
+<section>
+
+    <div class="min-h-screen w-full m-4 overflow-x-hidden   flex flex-wrap items-start justify-start rounded-tl grid-flow-col auto-cols-max gap-4 overflow-y-scroll">
+        {% if imgEdits %} {% for images in imgEdits %}
+        <!-- <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-100 ">
+            <div class="w-full rounded">
+                {% set img=path+images.image %}
+                <img src="{{url_for('static',filename=img)}}" class="w-96 h-60  mx-auto object-cover " alt="image" />
+            </div>
+        </div> -->
+        <div class="md:w-1/4 w-full h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-100 relative">
+            <div class="w-full rounded">
+                {% set img=path+images.image %}
+                <img src="{{url_for('static',filename=img)}}" class="w-96 h-60  mx-auto object-fill " alt="image" />
+            </div>
+            <div class="absolute inset-0 space-x-2 flex items-start top-1 right-20 justify-end  opacity-0 hover:opacity-100 transition-opacity duration-300">
+                <a href="/editor/{{images.image}}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-3 cursor-pointer  mr-2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                </a>
+                <a href="#" id="{{images.id}}" onclick="deleteImg(this.id)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2 cursor-pointer  mr-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                </a>
+                <a href="">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-save"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                </a>
+            </div>
+        </div>
+
+
+        {% endfor %}{% else %}
+        <!-- <img src="{{url_for('static',filename=img)}}" class="w-96 h-60 mx-auto object-fill" alt="image" /> -->
+        <div class="w-screen">
+            <h1 class="my-[15%]" style="text-align:center ;font-size:xx-large;">You haven't edited anything till date..</h1>
+        </div> {% endif %}
+        <!-- <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400">
+            <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+        <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+        <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+        <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+        <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+        <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+        <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+        <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div> -->
+    </div>
+</section>
+<script>
+    async function deleteImg(id) {
+
+        document.getElementById("loader").classList.remove("hidden");
+
+        var formdata = new FormData();
+
+        formdata.append("id", id);
+        formdata.append("operation", "delete");
+
+        const data = Object.fromEntries(formdata.entries());
+
+        const response = await fetch(`/images`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+        })
+        const jsonResponse = await response.json();
+        let alertMsg = document.getElementById("toast-default");
+        let msgDisplay = document.getElementById("msgDisplay");
+        if (response.ok) {
+            document.getElementById("loader").classList.add("hidden");
+            alertMsg.classList.remove("hidden");
+            msgDisplay.innerText = jsonResponse.message;
+
+            setTimeout(() => {
+                window.location.reload()
+            }, 2000);
+
+
+        } else {
+            document.getElementById("loader").classList.add("hidden");
+            alertMsg.classList.remove("hidden");
+            msgDisplay.innerText = jsonResponse.error;
+            setTimeout(() => {
+                window.location.reload()
+            }, 2000);
+
+        }
+
+
+    }
+</script>
+<script>
+    $("#images-tab-sidebar").addClass("bg-white text-gray-800");
+</script>
+{% endblock %}

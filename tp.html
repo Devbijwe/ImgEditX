@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static',filename='assets/favicon.png') }}" />
+    <title>{{params['mainTitle']}}</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" referrerpolicy="no-referrer" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"> -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script> -->
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <!-- sliding code ended -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/daisyui@2.50.0/dist/full.css" rel="stylesheet" type="text/css" /> -->
+
+    <link href="https://unpkg.com/swiper/swiper-bundle.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.9.2/tailwind.min.css" />
+    <!-- Font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+    <script src="https://rediffmail.authlink.me/js/sdk/otpless.js"></script>
+
+
+</head>
+
+<body>
+    <!-- component -->
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
+        <div class="-mx-3 md:flex mb-6">
+            <div class="md:w-1/2 px-3 mb-6 md:mb-0">
+                <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="imageWidth">
+          Image Width 
+        </label>
+                <input id="imageWidth" name="imageWidth" type="number" min="1" placeholder="Enter image width ( optional )" class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-red rounded py-3 px-4 mb-3">
+            </div>
+            <div class="md:w-1/2 px-3">
+                <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="imageHeight">
+          Image Height
+        </label>
+                <input id="imageHeight" name="imageHeight" type="number" min="1" placeholder="Enter image height ( optional )" class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4" id="grid-last-name" type="text"
+                    placeholder="Doe">
+            </div>
+        </div>
+        <div class="-mx-3 md:flex mb-6">
+            <div class="md:w-1/2 px-3 mb-6 md:mb-0">
+                <label for="imageType" class="block text-sm font-medium mb-2 dark:text-white">Image Type</label>
+                <select id="imageType" name="imageType" class="py-3 px-4 pr-9 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400">
+                    <option value="png" selected>PNG</option>
+                    <option value="jpg">JPG</option>
+                    <option value="jpeg">JPEG</option>
+                    <option value="pdf">PDF</option>
+                    <option value="webp">WEBP</option>
+                    <option value="bmp">BMP</option>
+                    <option value="gif">GIF</option>
+                    <option value="svg">SVG</option>
+                    <option value="tiff">TIFF</option>
+                    <option value="ico">ICO</option>
+                    <option value="cur">CUR</option>
+                    <option value="jp2">JP2</option>
+                    <option value="jpx">JPX</option>
+                    <option value="wbmp">WBMP</option>
+                </select></div>
+            <div class="md:w-1/2 px-3">
+
+                <label for="watermarkText" class="block text-sm font-medium mb-2 dark:text-white"> Watermark Text</label>
+                <input id="watermarkText" name="watermarkText" type="text" class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="Add a watermark to image ( optional )"></div>
+
+        </div>
+
+        <div class="-mx-3 md:flex mb-2">
+            <div class="md:w-1/2 px-3">
+                <label for="watermarkPosition" class="block text-sm font-medium mb-2 dark:text-white">Watermark Position</label>
+                <select id="watermarkPosition" name="watermarkPosition" class="py-3 px-4 pr-9 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400">
+                  <option value="top-left">Top Left</option>
+                  <option value="center">Center</option>
+                  <option value="top-right">Top Right</option>
+                  <option value="bottom-left">Bottom Left</option>
+                  <option value="bottom-right" selected>Bottom Right</option>
+                </select>
+            </div>
+            <div class="md:w-1/2 px-3 ">
+                <label for="watermarkSize" class="block text-sm font-medium mb-2 dark:text-white"> Watermark Size</label>
+                <input id="watermarkSize" name="watermarkSize" type="number" min="1" placeholder="Enter watermark size in pixels  ( default - 20px )" class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
+                    placeholder="font size for watermark"></div>
+
+            <!-- <div class="md:w-1/2 px-3">
+                    <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="grid-zip">
+          Zip
+        </label>
+                    <input class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4" id="grid-zip" type="text" placeholder="90210">
+                </div> -->
+
+        </div>
+
+        <!-- Download button -->
+        <div class="text-center">
+            <button onclick="downImg()" id="downloadButton" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Download
+              </button>
+
+        </div>
+    </div>
+
+</body>
+
+
+</html>

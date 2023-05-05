@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static',filename='assets/favicon/favicon.ico') }}" />
+    <title>{{params['mainTitle']}}</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" referrerpolicy="no-referrer" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"> -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script> -->
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <!-- sliding code ended -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/daisyui@2.50.0/dist/full.css" rel="stylesheet" type="text/css" /> -->
+
+    <link href="https://unpkg.com/swiper/swiper-bundle.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.9.2/tailwind.min.css" />
+    <!-- Font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" /> {% block style %}{% endblock %}
+    <script src="https://rediffmail.authlink.me/js/sdk/otpless.js"></script>
+    <script src="{{ url_for('static',filename='js/preline.js') }}"></script>
+
+
+    <style>
+        * {
+            font-family: 'Quicksand', sans-serif;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body>.skiptranslate {
+            display: none;
+        }
+        
+        .goog-te-banner-frame.skiptranslate {
+            display: none !important;
+        }
+        
+        body {
+            top: 0px !important;
+        }
+        
+        .goog-logo-link {
+            display: none ! important;
+        }
+        
+        .goog-te-gadget {
+            font-size: 0;
+        }
+        
+        div select option,
+        div select option>selected {
+            color: black;
+        }
+        
+        div select {
+            border: none;
+            border-bottom: 1px solid black;
+        }
+        
+        @media print {
+            #google_translate_element {
+                display: none;
+            }
+        }
+    </style>
+    <style>
+        #open-chatbot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #8b5cf6;
+            color: #fff;
+            font-size: 16px;
+            padding: 12px 24px;
+            border-radius: 50px;
+            box-shadow: 0px 4px 6px rgba(139, 92, 246, 0.2);
+            transition: background-color 0.3s ease;
+        }
+        
+        #open-chatbot:hover {
+            background-color: #7c3aed;
+            cursor: pointer;
+        }
+        
+        #chat-messages::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+        
+        .scroll-hide::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+        
+        #messages-container {
+            display: flex;
+            flex-direction: column-reverse;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div x-data="setupload()" x-init="$refs.loading.classList.add('hidden');$refs.loading.classList.remove('bg-indigo-800');" @resize.window="watchScreen()">
+        <div class="flex h-fit md:min-h-screen antialiased text-gray-900 bg-gray-100 dark:bg-dark dark:text-light loader_div">
+            <!-- Loading screen -->
+            <div x-ref="loading" id="loader" class="fixed inset-0 z-50 flex items-center justify-center text-2xl font-semibold text-white bg-pink-600">
+                <div class="loadingio-spinner-spinner-dohl2uy4d4">
+                    <div class="ldio-fupypcu83g">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- component -->
+    <div class="h-screen w-full bg-white relative flex overflow-hidden">
+        {% if "user" in session %}
+        <!-- Sidebar -->
+        <aside class="h-full w-16 flex flex-col space-y-10 items-center justify-center relative bg-gray-800 text-white">
+            <!-- Profile -->
+            <a href="/">
+                <div class="h-10 w-10 flex items-center justify-center rounded-lg cursor-pointer hover:text-gray-800 hover:bg-white  hover:duration-300 hover:ease-linear focus:bg-white" id="home-tab-sidebar">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                </div>
+            </a>
+
+            <!-- Editor -->
+            <a href="/editor/new">
+                <div class="h-10 w-10 flex items-center justify-center rounded-lg cursor-pointer hover:text-gray-800 hover:bg-white  hover:duration-300 hover:ease-linear focus:bg-white" id="editor-tab-sidebar">
+                    <!-- <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 3H21V21H3V3ZM9 3V21M3 9H21M3 15H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg> -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path fill="none" d="M0 0h24v24H0z"/>
+                    <path d="M12 7.5c.414 0 .75-.336.75-.75V3.75c0-.414-.336-.75-.75-.75s-.75.336-.75.75v2c0 .414.336.75.75.75zM7.5 9c.414 0 .75-.336.75-.75V3.75c0-.414-.336-.75-.75-.75S6.75 3.336 6.75 3.75v4.5c0 .414.336.75.75.75zm9 0c.414 0 .75-.336.75-.75V3.75c0-.414-.336-.75-.75-.75s-.75.336-.75.75v4.5c0 .414.336.75.75.75zM12 17.25c-.414 0-.75.336-.75.75v2.25c0 .414.336.75.75.75s.75-.336.75-.75v-2.25c0-.414-.336-.75-.75-.75zm6-1.5c0-.414-.336-.75-.75-.75h-2.25c-.414 0-.75.336-.75.75s.336.75.75.75h2.25c.414 0 .75-.336.75-.75zm-9 0c0 .414.336.75.75.75h2.25c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-2.25c-.414 0-.75.336-.75.75z"/>
+                  </svg>
+
+                </div>
+            </a>
+
+            <!-- Images-->
+            <a href="/images">
+                <div class="h-10 w-10 flex items-center justify-center rounded-lg cursor-pointer hover:text-gray-800 hover:bg-white  hover:duration-300 hover:ease-linear focus:bg-white" id="images-tab-sidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                </div>
+            </a>
+            <!-- Profile -->
+            <div class="h-10 w-10 flex items-center justify-center rounded-lg cursor-pointer hover:text-gray-800 hover:bg-white  hover:duration-300 hover:ease-linear focus:bg-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg>
+            </div>
+
+            <!-- Theme -->
+            <div id="dark-mode-toggle" class="h-10 w-10 flex items-center justify-center rounded-lg cursor-pointer hover:text-gray-800 hover:bg-white  hover:duration-300 hover:ease-linear focus:bg-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+        </svg>
+
+
+            </div>
+
+            <!-- Configuration -->
+            <div class="h-10 w-10 flex items-center justify-center rounded-lg cursor-pointer hover:text-gray-800 hover:bg-white  hover:duration-300 hover:ease-linear focus:bg-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+            </div>
+
+        </aside>
+        {% endif %}
+
+
+
+        <div class="w-full h-full flex flex-col justify-between">
+            <!-- Header -->
+            <header class="h-16 w-full flex items-center relative justify-between px-5 space-x-10 bg-gray-800 antialiased">
+
+                <div class="flex flex-shrink-0 items-center space-x-4 text-white ">
+                    <div class="brand-and-icon">
+                        <a href="/" class="navbar-brand underline decoration-orange-500 text-3xl font-bold p-4">
+                            <h1 id="brandName ">Img<span class='highlight' style="color: #5092c7;">Edit</span><span class="text-pink-400 text-4xl">X</span></h1>
+                            <!-- <img src="{{url_for('static',filename='assets/brand.svg')}}" alt="" class="d-inline-block align-text-top"> -->
+                            <!-- <span>{{params['brandName']}}</span> -->
+                        </a>
+                        <!-- <h1>ImgEditX</h1> -->
+                    </div>
+                </div>
+                {% if "user" in session %}
+                <!-- Informação -->
+                <div class="flex flex-shrink-0 items-center space-x-4 text-white">
+
+                    <!-- Texto -->
+                    <div class="flex flex-col items-end ">
+                        <!-- Nome -->
+                        <div class="text-md font-medium capitalize" id="userName">{{user.name}}</div>
+                        <!-- Título -->
+                        <div class="text-sm font-regular">{% if user.email %}{{user.email}} {% else %}{{user.mobile}}{% endif %}</div>
+                        <a href="/logout">
+                            <div class="text-sm font-regular">Logout</div>
+                        </a>
+                    </div>
+
+                    <!-- Foto -->
+                    <div class="h-10 w-10 rounded-full overflow-hidden cursor-pointer bg-gray-900 border-2 border-blue-400">
+                        {% if user.picture %}
+                        <img src="{{user.picture}}" alt="userImg"> {% else %}
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>                        {% endif %} </div>
+                </div> {% endif %}
+            </header>
+
+            <!-- Main -->
+            <!-- <main class="max-w-full h-full flex relative overflow-y-hidden"></main> -->
+            <main class=" overflow-y-auto">
+                {% block main %}{% endblock %} {% block submain %}{% endblock %}
+
+                <!-- Container -->
+                <!-- <div class="h-full w-full m-4 flex flex-wrap items-start justify-start rounded-tl grid-flow-col auto-cols-max gap-4 overflow-y-scroll">
+                    
+                    <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+                    <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+                    <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+                    <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+                    <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+                    <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+                    <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+                    <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+                    <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+                </div> -->
+            </main>
+
+        </div>
+
+    </div>
+
+
+    <div>
+        <hr>
+
+        <!-- Toast -->
+        {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
+        <div class="fixed top-20 z-50 right-5">
+
+            <div id="toast-default" class="  flex items-center p-4 w-full max-w-xs text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+                <div class="inline-flex flex-shrink-0 justify-center items-center w-8 h-8 text-blue-500 bg-blue-100 rounded-lg dark:bg-blue-800 dark:text-blue-200">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clipRule="evenodd"></path></svg>
+                    <span class="sr-only">Fire icon</span>
+
+                </div>
+                <div class="ml-3 text-sm font-normal">{{message}}</div>
+                <button type="button" class="alert-del ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+                    data-bs-dismiss="#toast-default" data-dismiss-target="#toast-default" aria-label="Close">
+        <span class="sr-only">Close</span>
+        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+    </button>
+            </div>
+        </div>
+
+        {% endfor %} {% endif %} {% endwith %}
+        <div class="flex items-end justify-end fixed top-32 right-0 mb-4 mr-4 z-10">
+
+            <div id="toast-default" class=" hidden flex items-center p-4 w-full max-w-xs text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+                <div class="inline-flex flex-shrink-0 justify-center items-center w-8 h-8 text-blue-500 bg-blue-100 rounded-lg dark:bg-blue-800 dark:text-blue-200">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clipRule="evenodd"></path></svg>
+                    <span class="sr-only">Fire icon</span>
+                </div>
+                <div class="ml-3 text-sm font-normal" id="msgDisplay"></div>
+                <button type="button" class="alert-del ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+                    data-bs-dismiss="#toast-default" data-dismiss-target="#toast-default" aria-label="Close">
+            <span class="sr-only">Close</span>
+            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+        </button>
+            </div>
+            <!-- <div>
+                <a title="Buy me a beer" href="https://www.buymeacoffee.com/scottwindon" target="_blank" class="block w-16 h-16 rounded-full transition-all shadow hover:shadow-lg transform hover:scale-110 hover:rotate-12">
+                    <img class="object-cover object-center w-full h-full rounded-full" src="https://i.pinimg.com/originals/60/fd/e8/60fde811b6be57094e0abc69d9c2622a.jpg" />
+                </a>
+            </div> -->
+        </div>
+        <!-- Toast -->
+
+        <!-- <iframe src="/footer" style="height:385px; width: 100% ; border: none;"></iframe> -->
+    </div>
+    <!-- chats -->
+    {% if 'user' in session %}
+    <div class="fixed bottom-4 right-4 z-20">
+        <!-- block w-16 h-16 rounded-full transition-all shadow hover:shadow-lg transform hover:scale-110 hover:rotate-12 -->
+        <button id="open-chatbot" class="px-4 py-2 rounded-lg bg-purple-600 rounded-full  transition-all shadow hover:shadow-lg transform hover:scale-110 hover:rotate-12  block scale-75 opacity-50 hover:opacity-100 text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-circle inline-block align-text-top mr-2">
+              <path d="M21 12.794c0-5.422-4.158-9.862-9.301-9.99-5.484-.136-9.699 4.18-9.699 9.604 0 5.423 4.215 9.862 9.699 9.604 5.143-.128 9.301-4.568 9.301-9.609z"></path>
+              <path d="M15.834 7.191c.43-.428.845-.728 1.226-.925.427-.237.795-.325 1.075-.325.28 0 .629.089 1.053.325.381.197.796.497 1.226.925l.74.741-2.565 2.565-.741-.741zm-3.46-2.96c-3.87 0-7 3.134-7 7s3.13 7 7 7 7-3.134 7-7-3.13-7-7-7z"></path>
+            </svg>
+            Chat
+          </button>
+
+        <div id="chatbot" class="hidden w-auto  pb-10 mx-0 overflow-y-hidden bg-white shadow-xl rounded-lg">
+            <div class="flex justify-between items-center p-3 bg-purple-600 text-white rounded-t-lg">
+                <h2 class="text-lg font-medium"> Need help? Chat with us!</h2>
+                <button class="close-chatbot p-2 rounded-full bg-white text-purple-600 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" id="close-chatbot">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M11.414 10L16.707 4.707a1 1 0 0 0-1.414-1.414L10 8.586 4.707 3.293a1 1 0 0 0-1.414 1.414L8.586 10l-5.293 5.293a1 1 0 0 0 1.414 1.414L10 11.414l5.293 5.293a1 1 0 0 0 1.414-1.414L11.414 10z"/>
+              </svg>
+            </button>
+            </div>
+            <div id="chat-messages" class="px-4 py-2 flex flex-col max-h-60 overflow-y-auto mb-5">
+
+            </div>
+            <form id="chat-form" class="flex items-center justify-center fixed bottom-4 px-4 py-2">
+                <input type="text" maxlength="250" autofocus placeholder="Type your message..." class=" w-10/12 border-2 border-purple-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                <button type="submit" class="ml-2 px-2 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
+              Send
+            </button>
+            </form>
+        </div>
+    </div>
+    <script>
+        const openChatBtn = document.getElementById('open-chatbot');
+        const closeChatBtn = document.getElementById('close-chatbot');
+        const chatbot = document.getElementById('chatbot');
+        const chatForm = document.getElementById('chat-form');
+        const chatMessages = document.getElementById('chat-messages');
+
+        let isChatOpen = false;
+        let chatStarted = false;
+
+
+        function toggleChat() {
+            if (!isChatOpen) {
+                chatbot.classList.remove('hidden');
+                openChatBtn.classList.add('hidden');
+                isChatOpen = true;
+                chatStarted = true;
+                fetch("/chats").then((response) => response.json())
+                    .then((data) => {
+
+                        if (data.code == 200) {
+
+
+                            addmsg(data);
+
+
+                        } else {
+
+                        }
+
+                    })
+                    .catch((error) => {
+
+                    });
+
+
+            } else {
+                chatbot.classList.add('hidden');
+                openChatBtn.classList.remove('hidden');
+                isChatOpen = false;
+            }
+        }
+
+        function addmsg(data) {
+            let messageEl = `   <div class="flex flex-col items-start my-2">
+                <div class="flex flex-col w-3/4 rounded-lg py-2 px-4 bg-pink-900 text-white">
+                    <p class="text-sm text-gray-100">Hello! How can I assist you today?</p>
+                </div>
+                <span class="text-xs text-gray-400 mt-1">ImgEditX - Long time  ago</span>
+            </div>`;
+            for (key in data["data"]) {
+                messageEl += `  <div class="flex flex-col ${data["data"][key].sender=='0'?' items-start ':' items-end '}   my-2">
+                <div class="flex flex-col max-w-3/4 rounded-lg py-2 px-4 ${data["data"][key].sender=='0'?'bg-pink-900':'bg-pink-600'} text-white">
+                    <p class="text-sm  text-gray-100 ${data["data"][key].sender=='0'?' text-start':'text-end'}">${data["data"][key].msg}</p>
+                </div>
+                <span class="text-xs text-gray-400 mt-1">${data["data"][key].sender=='0'?'ImgEditX':document.getElementById("userName").innerText} - ${getTimes(data["data"][key].date)}</span> 
+            </div>`;
+            }
+
+            chatMessages.innerHTML = (messageEl);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        }
+
+        function getTimes(time) {
+            const dateTimeStr = time;
+
+            const date = new Date(dateTimeStr);
+
+            date.setTime(date.getTime());
+
+            const hours = date.getHours() % 12 || 12;
+
+            const minutes = date.getMinutes();
+            const amOrPm = date.getHours() < 12 ? 'AM' : 'PM';
+
+            const timeStr = `${hours}:${minutes < 10 ? '0' + minutes : minutes} ${amOrPm}`;
+            dateStr = date.toLocaleDateString('en-IN');
+            return dateStr + "  " + timeStr;
+        }
+
+
+        function sendMessage(e) {
+            const messageInput = e.target.elements[0];
+            const message = messageInput.value.trim();
+            if (message !== '') {
+                url = `/chats`;
+
+                var formdata = new FormData();
+
+                formdata.append("msg", message);
+
+                fetch(url, {
+                        method: 'POST',
+                        body: formdata,
+                    }).then((response) => response.json())
+                    .then((data) => {
+
+                        if (data.code == 200) {
+
+
+                            addmsg(data);
+
+
+
+
+                        } else {
+
+                        }
+
+                    })
+                    .catch((error) => {
+                        // console.error('Error:', error);
+                    });
+
+                messageInput.value = '';
+            }
+        }
+
+        openChatBtn.addEventListener('click', toggleChat);
+        closeChatBtn.addEventListener('click', toggleChat);
+        chatForm.addEventListener('submit', e => {
+            e.preventDefault();
+            sendMessage(e);
+
+        });
+    </script>
+
+    {% endif %}
+    <!-- chats -->
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HQHGZVSHLR"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-HQHGZVSHLR');
+    </script>
+    <!-- Google tag (gtag.js) -->
+
+    <script>
+        let alert_del = document.querySelectorAll('.alert-del');
+        alert_del.forEach((x) =>
+            x.addEventListener('click', function() {
+                x.parentElement.classList.add('hidden');
+            })
+        );
+        setTimeout(() => {
+            alert_del.forEach((x) => x.parentElement.classList.add('hidden'));
+        }, 16000);
+    </script>
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.3/dist/alpine.min.js" defer></script>
+    <script>
+        const setupload = () => {
+            document.getElementsByClassName("loader_div")[0].classList.add("hidden")
+            return {
+                isSidebarOpen: false,
+                currentSidebarTab: null,
+                isSettingsPanelOpen: false,
+                isSubHeaderOpen: false,
+                watchScreen() {
+                    if (window.innerWidth <= 1024) {
+                        this.isSidebarOpen = false
+                    }
+                },
+            }
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+
+    <!-- <script src="{{url_for('static',filename='js/script.js')}}"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/TypewriterJS/2.19.0/core.min.js" integrity="sha512-t4NGjfaRaGCjmiTGBsiG3w8FCp8ZY7dPlwZAXfeoGPARUT/rt3OP0NpQkblSgZy/2R8vPTXiEcq/zcWIJ8NusQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- <script src="{{url_for('static',filename='js/TypeIt.js')}}"></script> -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+            }, 'google_translate_element');
+        }
+    </script>
+
+    <!-- <script type='text/javascript'>
+        const initiatedBy = new Typewriter('.initiatedBy', {
+            loop: true,
+        });
+
+        initiatedBy.typeString(' An initiative by Engineering Students.')
+            .pauseFor(2500)
+            .start();
+
+        /* const brandName = new Typewriter('#brandName', {
+             loop: true,
+         });
+
+         brandName.typeString('Memer<span class="highlight" style="color: #5092c7;">Kida</span>')
+             .pauseFor(10000)
+             .start();*/
+    </script> -->
+
+
+    {% block script %}{% endblock %}
+    <script src="{{ url_for('static',filename='js/index.js') }}"></script>
+
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.3/dist/alpine.min.js" defer></script>
+</body>
+
+
+</html>
