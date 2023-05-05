@@ -1,8 +1,8 @@
 {
     "params": {
-        "local_server": "True",
+ "local_server": "False",
         "local_url": "mysql://root:@localhost/imgeditor",
-        "prod_url": "mysql://root:Shiva@123@localhost/imgeditor",
+        "prod_url": "mysql://shivabijwe:Shiva@123@shivabijwe.mysql.pythonanywhere-services.com/shivabijwe$imgeditor",
         "mainTitle": "ImgEditX",
         "author": "shivabijwe",
         "phone": "7666230646",
