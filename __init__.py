@@ -10,11 +10,11 @@ CORS(app)
 app.secret_key='sdx2323@3343zbhcfew3rr3343@@###$2ffr454'
 # app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
-from config import Config
+from .config import Config
 app.config.from_object(Config)
 db=SQLAlchemy(app)   
 
-from views import *
+from .views import *
 
 with app.app_context():
     db.create_all()
