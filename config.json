@@ -2,16 +2,10 @@
     "params": {
  "local_server": "False",
         "local_url": "mysql://root:@localhost/imgeditor",
-        "prod_url": "mysql://shivabijwe:Shiva@123@shivabijwe.mysql.pythonanywhere-services.com/shivabijwe$imgeditor",
+        "prod_url": "production_url",
         "mainTitle": "ImgEditX",
-        "author": "shivabijwe",
-        "phone": "7666230646",
-        "address": "Yavatmal, MH, 445001",
+       
         "copyright": "ImgEditX.dev",
-        "tw_url": "https://twitter.com/_memer_kida",
-        "fb_url": "https://www.facebook.com",
-        "ig_url": "https://www.instagram.com/memer_kida_official/",
-        "gh_url": "https://github.com/Devbijwe",
        
 
     },
